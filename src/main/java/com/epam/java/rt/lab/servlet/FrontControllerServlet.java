@@ -19,6 +19,7 @@ import java.io.IOException;
 @WebServlet(name = "Service", urlPatterns = "/web/*")
 public class FrontControllerServlet extends HttpServlet {
     private static final Logger logger = LoggerFactory.getLogger(FrontControllerServlet.class);
+    private static ActionFactory actionFactory = new ActionFactory();
 
     public FrontControllerServlet() throws ActionException {
         logger.info("Front controller servlet initiated");
@@ -30,7 +31,7 @@ public class FrontControllerServlet extends HttpServlet {
         logger.info("Front controller servlet servicing request '{}'", req.getMethod().concat(req.getPathInfo()));
         try {
             if (!req.getPathInfo().startsWith("/static/")) {
-                ActionResult actionResult = new ActionFactory().getAction(req).execute(req, resp);
+                ActionResult actionResult = FrontControllerServlet.actionFactory.getAction(req).execute(req, resp);
                 if (actionResult.getRedirectURI() == null) {
                     req.setAttribute("result", actionResult);
                     req.getRequestDispatcher("/WEB-INF/jsp/_template.jsp").forward(req, resp);

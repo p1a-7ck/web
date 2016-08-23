@@ -17,7 +17,7 @@ public class ActionFactory {
     private static final Logger logger = LoggerFactory.getLogger(ActionFactory.class);
     private final Map<String, Action> actionMap = new HashMap<String, Action>();
 
-    public ActionFactory() throws ActionException {
+    public ActionFactory() {
         logger.info("Action factory initiated");
     }
 
