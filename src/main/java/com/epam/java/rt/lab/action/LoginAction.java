@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * web
@@ -22,25 +24,28 @@ public class LoginAction implements Action {
             actionResult.setProperty("jsp", "login.jsp");
         } else if (req.getMethod().equals("POST")) {
             logger.info("Login action (POST)");
-            String[] errorArray = authenticate
-                    (String.valueOf(req.getAttribute("email")), String.valueOf(req.getAttribute("email")));
-            if (errorArray == null) {
+            actionResult.setProperty("title", "Login");
+            actionResult.setProperty("jsp", "login.jsp");
+            List<String> errorList = authenticate
+                    (String.valueOf(req.getParameter("email")), String.valueOf(req.getParameter("password")));
+            if (errorList.size() == 0) {
                 logger.info("Authenticate success");
                 actionResult.setRedirectURI("/web/home");
             } else {
-                logger.info("Authenticate error ({})", errorArray);
-                actionResult.setProperty("errorArray", errorArray);
+                logger.info("Authenticate error ({})", errorList);
+                actionResult.setProperty("errorList", errorList);
             }
         }
         return actionResult;
     }
 
-    private String[] authenticate(String email, String password) {
+    private List<String> authenticate(String email, String password) {
+        List<String> errorList = new ArrayList<>();
         if (!"123@123.com".equals(email) || !"123".equals(password)) {
-            String[] errorArray = {"Authenticate error"};
-            return errorArray;
+            errorList.add("Authenticate error");
+            return errorList;
         }
-        return null;
+        return errorList;
     }
 
 }
